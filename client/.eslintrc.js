@@ -75,6 +75,8 @@ module.exports = {
       },
     ],
     //#endregion  //*======== Import Sort ===========
+    'import/no-unresolved': 'off',
+    'import/exports-last': 'error',
   },
   globals: {
     React: true,

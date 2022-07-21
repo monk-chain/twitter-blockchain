@@ -1,5 +1,6 @@
-import SideBar from '@/components/layout//Sidebar/Bar';
 import ContainerPage from '@/components/layout/Container/Container';
+import { SideBar } from '@/components/layout/Sidebar/Sidebar';
+import { SelectWalletModal } from '@/components/layout/Wallet/walletModal';
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
         {/* <aside className='w-350 bg-black'>
           <AllBox />
         </aside> */}
+        <SelectWalletModal />
       </div>
     </>
   );
