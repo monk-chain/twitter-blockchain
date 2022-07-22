@@ -1,6 +1,7 @@
 import ContainerPage from '@/components/layout/Container/Container';
 import { SideBar } from '@/components/layout/Sidebar/Sidebar';
-import { SelectWalletModal } from '@/components/layout/Wallet/walletModal';
+import { LogoutModal } from '@/components/layout/Wallet/LogoutModal';
+import { SelectWalletModal } from '@/components/layout/Wallet/SelectWalletModal';
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
           <AllBox />
         </aside> */}
         <SelectWalletModal />
+        <LogoutModal />
       </div>
     </>
   );

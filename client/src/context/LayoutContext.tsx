@@ -5,6 +5,9 @@ type Context = {
   isWalletModal: boolean;
   handleOpenWalletModal: () => void;
   handleCloseWalletModal: () => void;
+  isLogoutModal: boolean;
+  handleOpenLogoutModal: () => void;
+  handleCloseLogoutModal: () => void;
 };
 
 function createCtx<ContextType>() {
@@ -31,10 +34,19 @@ const useLayoutCtx = (): Context => {
     onClose: handleCloseWalletModal,
   } = useDisclosure();
 
+  const {
+    isOpen: isLogoutModal,
+    onOpen: handleOpenLogoutModal,
+    onClose: handleCloseLogoutModal,
+  } = useDisclosure();
+
   return {
     isWalletModal,
     handleOpenWalletModal,
     handleCloseWalletModal,
+    isLogoutModal,
+    handleOpenLogoutModal,
+    handleCloseLogoutModal,
   };
 };
 
