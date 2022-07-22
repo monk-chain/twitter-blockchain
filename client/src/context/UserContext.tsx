@@ -39,16 +39,9 @@ const useCtxMain = (): Context => {
     userId: '0',
   });
 
-  console.log('user context');
-  console.log('account', account);
-
   useEffect(() => {
     (async () => {
       const userProfile = await profileContractByWallet.getUserProfile(account);
-      console.log(
-        '🚀 ~ file: UserContext.tsx ~ line 46 ~ userProfile',
-        userProfile
-      );
       if (userProfile.name !== '') setIsProfile(true);
       setUser((_user) => {
         // TODO あまり良くない userId account
@@ -61,7 +54,7 @@ const useCtxMain = (): Context => {
       });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [profileContractByWallet]);
 
   return {
     user,

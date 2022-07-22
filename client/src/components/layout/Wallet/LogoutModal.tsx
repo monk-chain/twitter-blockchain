@@ -8,14 +8,15 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
-import { useEffect } from 'react';
 
 import { useLayoutContext } from '@/context/LayoutContext';
 import { useProviderContext } from '@/context/ProviderContext';
+import { useUserContext } from '@/context/UserContext';
 
 export const LogoutModal = () => {
   const {
@@ -23,19 +24,25 @@ export const LogoutModal = () => {
     handleCloseLogoutModal: onClose,
     handleOpenInputModal,
   } = useLayoutContext();
+  const toast = useToast();
 
   const { account, deactivate, library } = useWeb3React<Web3Provider>();
   const { profileContractByWallet } = useProviderContext();
+  const { isProfile } = useUserContext();
 
-  useEffect(() => {}, [account]);
+  // useEffect(() => {}, [account]);
 
   const createUser = async () => {
     handleOpenInputModal();
-    // console.log(
-    //   'profileContractByWallet.countUsers',
-    //   await profileContractByWallet.countUsers()
-    // );
-    // console.log('createUser');
+  };
+
+  const updateUser = async () => {
+    toast({
+      title: 'Comming soon',
+      status: 'info',
+      duration: 1000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -49,20 +56,37 @@ export const LogoutModal = () => {
           }}
         />
         <ModalBody paddingBottom='1.5rem'>
-          <VStack>
-            <Button
-              variant='outline'
-              onClick={() => {
-                createUser();
-                onClose();
-              }}
-              w='100%'
-            >
-              <HStack w='100%' justifyContent='center'>
-                <Text>Mint User Profile</Text>
-              </HStack>
-            </Button>
-          </VStack>
+          {!isProfile ? (
+            <VStack>
+              <Button
+                variant='outline'
+                onClick={() => {
+                  createUser();
+                  onClose();
+                }}
+                w='100%'
+              >
+                <HStack w='100%' justifyContent='center'>
+                  <Text>Mint user profile</Text>
+                </HStack>
+              </Button>
+            </VStack>
+          ) : (
+            <VStack>
+              <Button
+                variant='outline'
+                onClick={() => {
+                  updateUser();
+                  onClose();
+                }}
+                w='100%'
+              >
+                <HStack w='100%' justifyContent='center'>
+                  <Text>Update user profile</Text>
+                </HStack>
+              </Button>
+            </VStack>
+          )}
           <VStack>
             <Button
               variant='outline'

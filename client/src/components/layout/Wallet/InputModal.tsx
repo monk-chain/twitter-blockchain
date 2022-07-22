@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
-import { toast } from 'react-hot-toast';
 
 import { useTargetObject } from '@/hooks/useCreate';
 
@@ -22,6 +22,7 @@ export const InputModal = () => {
   const { isInputModal: isOpen, handleCloseInputModal: onClose } =
     useLayoutContext();
 
+  const toast = useToast();
   const { profileContractByWallet } = useProviderContext();
   const {
     targetobject: userInput,
@@ -42,7 +43,17 @@ export const InputModal = () => {
       profileContractByWallet.createProfile(userInput.name, userInput.image);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast.error(error);
+      console.log(
+        '🚀 ~ file: InputModal.tsx ~ line 46 ~ submit ~ error',
+        error
+      );
+      toast({
+        title: 'error',
+        description: error,
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
     }
   };
 
