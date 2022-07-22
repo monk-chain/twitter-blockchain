@@ -6,7 +6,7 @@ const RPC_URLS = {
   4: 'https://rinkeby.infura.io/v3/84842078b09946638c03157f83405213',
 };
 const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42],
+  supportedChainIds: [1, 3, 4, 5, 42, 31337],
 });
 
 const walletconnect = new WalletConnectConnector({

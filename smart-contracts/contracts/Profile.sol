@@ -11,7 +11,7 @@ import "hardhat/console.sol";
  * @notice It is a contract for users to bind their address
  * to a customizable profile by depositing a NFT.
  */
-contract PancakeProfile is AccessControl {
+contract Profile is AccessControl {
     using Counters for Counters.Counter;
 
     mapping(address => User) public users;

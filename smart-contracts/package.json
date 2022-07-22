@@ -1,5 +1,17 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "node": "npx hardhat node",
+    "compile": "npx hardhat compile",
+    "deploy:localhost": "npx hardhat run --network localhost scripts/deploy.ts",
+    "deploy:rinkeby": "npx hardhat run --network rinkeby scripts/deploy.ts",
+    "deploy:mumbai": "npx hardhat run --network mumbai scripts/deploy.ts",
+    "test": "npx hardhat test",
+    "test:coverage": "npx hardhat coverage",
+    "test:size-contracts": "npx hardhat size-contracts",
+    "verify:rinkeby": "npx hardhat verify --network rinkeby",
+    "verify:mumbai": "npx hardhat verify --network mumbai"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.1.0",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
