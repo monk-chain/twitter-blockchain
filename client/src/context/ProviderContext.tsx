@@ -27,12 +27,12 @@ const ProviderContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const auth = useLayoutCtx();
-  return <SetUseProviderContext value={auth}>{children}</SetUseProviderContext>;
+  const ctx = useCtxMain();
+  return <SetUseProviderContext value={ctx}>{children}</SetUseProviderContext>;
 };
 
-const useLayoutCtx = (): Context => {
-  const { active, library } = useWeb3React<Web3Provider>();
+const useCtxMain = (): Context => {
+  const { account, active, library } = useWeb3React<Web3Provider>();
   const [profileContractByWallet, setProfileContractByWallet] =
     useState<ethers.Contract>(
       new ethers.Contract(profileContractAddress, ProfileContractJson.abi)
@@ -52,7 +52,8 @@ const useLayoutCtx = (): Context => {
         new ethers.Contract(profileContractAddress, ProfileContractJson.abi)
       );
     }
-  }, [active, library]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account]);
 
   return {
     profileContractByWallet,

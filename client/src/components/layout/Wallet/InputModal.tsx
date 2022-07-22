@@ -16,10 +16,7 @@ import { useTargetObject } from '@/hooks/useCreate';
 import { useLayoutContext } from '@/context/LayoutContext';
 import { useProviderContext } from '@/context/ProviderContext';
 
-interface UserMint {
-  name: string;
-  image: string;
-}
+import { UserMint } from '@/types/User';
 
 export const InputModal = () => {
   const { isInputModal: isOpen, handleCloseInputModal: onClose } =

@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
+import { useEffect } from 'react';
 
 import { useLayoutContext } from '@/context/LayoutContext';
 import { useProviderContext } from '@/context/ProviderContext';
@@ -23,8 +24,10 @@ export const LogoutModal = () => {
     handleOpenInputModal,
   } = useLayoutContext();
 
-  const { deactivate, library } = useWeb3React<Web3Provider>();
+  const { account, deactivate, library } = useWeb3React<Web3Provider>();
   const { profileContractByWallet } = useProviderContext();
+
+  useEffect(() => {}, [account]);
 
   const createUser = async () => {
     handleOpenInputModal();

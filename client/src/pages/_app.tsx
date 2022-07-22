@@ -7,6 +7,7 @@ import '@/styles/globals.css';
 
 import { LayoutContextProvider } from '@/context/LayoutContext';
 import { ProviderContextProvider } from '@/context/ProviderContext';
+import { UserContextProvider } from '@/context/UserContext';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getLibrary(provider: any): Web3Provider {
@@ -20,9 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Web3ReactProvider getLibrary={getLibrary}>
       <ChakraProvider colorModeManager={localStorageManager}>
         <ProviderContextProvider>
-          <LayoutContextProvider>
-            <Component {...pageProps} />
-          </LayoutContextProvider>
+          <UserContextProvider>
+            <LayoutContextProvider>
+              <Component {...pageProps} />
+            </LayoutContextProvider>
+          </UserContextProvider>
         </ProviderContextProvider>
       </ChakraProvider>
     </Web3ReactProvider>

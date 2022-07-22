@@ -28,11 +28,11 @@ function createCtx<ContextType>() {
 const [useLayoutContext, SetUseLayoutContext] = createCtx<Context>();
 
 const LayoutContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const auth = useLayoutCtx();
-  return <SetUseLayoutContext value={auth}>{children}</SetUseLayoutContext>;
+  const ctx = useCtxMain();
+  return <SetUseLayoutContext value={ctx}>{children}</SetUseLayoutContext>;
 };
 
-const useLayoutCtx = (): Context => {
+const useCtxMain = (): Context => {
   const {
     isOpen: isWalletModal,
     onOpen: handleOpenWalletModal,

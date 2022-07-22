@@ -1,8 +1,10 @@
+import { Image } from '@chakra-ui/react';
 import { useWeb3React } from '@web3-react/core';
 import React, { useState } from 'react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 
 import { useLayoutContext } from '@/context/LayoutContext';
+import { useUserContext } from '@/context/UserContext';
 
 import SideberItem from './SideberItem';
 import {
@@ -32,6 +34,7 @@ const style = {
 
 export const SideBar = () => {
   const [selected, setSelected] = useState<string>('HOME');
+  const { user, isProfile } = useUserContext();
 
   const { handleOpenWalletModal, handleOpenLogoutModal } = useLayoutContext();
   const { library, chainId, account, activate, deactivate, active } =
@@ -72,16 +75,15 @@ export const SideBar = () => {
               onClick={handleOpenLogoutModal}
             >
               <div className={style.profileLeft}>
-                <TwitterIcon />
-                {/* <Image
-                src={currentUser.profileImage}
-                alt='profile'
-                className={`${style.profileImage} smallHex`}
-              /> */}
+                <Image
+                  src={user.image}
+                  alt='profile'
+                  className={`${style.profileImage} smallHex`}
+                />
               </div>
               <div className={style.profileRight}>
                 <div className={style.details}>
-                  <div className={style.name}>user name</div>
+                  <div className={style.name}>{user.name}</div>
                   <div className={style.handle}>
                     @{account.slice(0, 6)}...{account.slice(39)}
                   </div>
