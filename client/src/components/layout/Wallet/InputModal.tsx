@@ -15,12 +15,15 @@ import { useTargetObject } from '@/hooks/useCreate';
 
 import { useLayoutContext } from '@/context/LayoutContext';
 import { useProviderContext } from '@/context/ProviderContext';
+import { useUserContext } from '@/context/UserContext';
 
 import { UserMint } from '@/types/User';
 
 export const InputModal = () => {
   const { isInputModal: isOpen, handleCloseInputModal: onClose } =
     useLayoutContext();
+
+  const { handleIsProfile, handleSetUser } = useUserContext();
 
   const toast = useToast();
   const { profileContractByWallet } = useProviderContext();
@@ -33,14 +36,31 @@ export const InputModal = () => {
     image: '',
   });
 
-  const submit = () => {
+  const submit = async () => {
     setEditUserInput({
       name: '',
       image: '',
     });
     onClose();
     try {
-      profileContractByWallet.createProfile(userInput.name, userInput.image);
+      const pooltx = await profileContractByWallet.createProfile(
+        userInput.name,
+        userInput.image
+      );
+      const tx = await pooltx.wait();
+      const { args, blockNumber } = tx.events[0];
+      const msgSender = args[0];
+      const [userId, name, accountAddress, image] =
+        await profileContractByWallet.getUserProfile(msgSender);
+
+      handleSetUser({
+        userId,
+        name,
+        account: accountAddress,
+        image,
+      });
+      handleIsProfile(true);
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(

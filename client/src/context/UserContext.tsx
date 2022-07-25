@@ -9,6 +9,9 @@ import { User } from '@/types/User';
 type Context = {
   user: User;
   isProfile: boolean;
+  handleSetUser: (user: User) => void;
+  handleLogout: () => void;
+  handleIsProfile: (bool: boolean) => void;
 };
 
 function createCtx<ContextType>() {
@@ -39,10 +42,30 @@ const useCtxMain = (): Context => {
     userId: '0',
   });
 
+  const handleIsProfile = (bool: boolean) => {
+    setIsProfile(bool);
+  };
+
+  const handleSetUser = (user: User) => {
+    setIsProfile(false);
+    setUser(user);
+  };
+
+  const handleLogout = () => {
+    setUser({
+      name: 'unnamed',
+      image: '/mm.png',
+      account: '0x0000000000000000000000000000000000000000',
+      userId: '0',
+    });
+  };
+
   useEffect(() => {
     (async () => {
       const userProfile = await profileContractByWallet.getUserProfile(account);
-      if (userProfile.name !== '') setIsProfile(true);
+      if (userProfile.name) setIsProfile(true);
+      else setIsProfile(false);
+
       setUser((_user) => {
         // TODO あまり良くない userId account
         return {
@@ -59,6 +82,9 @@ const useCtxMain = (): Context => {
   return {
     user,
     isProfile,
+    handleLogout,
+    handleSetUser,
+    handleIsProfile,
   };
 };
 

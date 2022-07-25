@@ -28,7 +28,7 @@ export const LogoutModal = () => {
 
   const { account, deactivate, library } = useWeb3React<Web3Provider>();
   const { profileContractByWallet } = useProviderContext();
-  const { isProfile } = useUserContext();
+  const { isProfile, handleLogout } = useUserContext();
 
   // useEffect(() => {}, [account]);
 
@@ -92,6 +92,7 @@ export const LogoutModal = () => {
               variant='outline'
               onClick={() => {
                 deactivate();
+                handleLogout();
                 onClose();
               }}
               w='100%'
