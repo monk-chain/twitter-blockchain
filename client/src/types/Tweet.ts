@@ -1,7 +1,7 @@
 import { User } from './User';
 
 export interface Tweet {
-  userWalletAddress: string;
+  userAddress: string;
   id: string; // BigInt
   title: string;
   body: string;

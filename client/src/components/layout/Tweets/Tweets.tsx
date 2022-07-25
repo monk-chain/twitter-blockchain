@@ -7,7 +7,7 @@ import { format } from 'timeago.js';
 
 import { Tweet } from '@/types/Tweet';
 const style = {
-  wrapper: ` text-slate-50  flex p-3 border-b border-[#38444d]`,
+  wrapper: ` text-slate-50  p-3 border-b border-[#38444d]`,
   profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
   postMain: `flex-1 px-4`,
   headerDetails: `flex items-center`,
@@ -21,7 +21,12 @@ const style = {
 };
 import { gql, GraphQLClient } from 'graphql-request';
 
+import { useProviderContext } from '@/context/ProviderContext';
+
+import { User } from '@/types/User';
+
 export default function Tweets() {
+  const { profileContractByProvider } = useProviderContext();
   const toast = useToast();
   const commingSoon = async () => {
     toast({
@@ -35,8 +40,11 @@ export default function Tweets() {
     'https://api.studio.thegraph.com/query/31671/tweet/v0.1.0'
   );
   const getTweet = async () => {
+    let resultTweet: Tweet[] = [];
     try {
-      const { tweets: _tweets } = await grClient.request<{ tweets: Tweet[] }>(
+      const { tweets } = await grClient.request<{
+        tweets: Tweet[];
+      }>(
         gql`
           {
             tweets(first: 5) {
@@ -52,14 +60,42 @@ export default function Tweets() {
           }
         `
       );
-      _tweets.map((tweet) => {
-        console.log('tweet', tweet);
-      });
-
-      setTweets(_tweets);
+      resultTweet = tweets;
     } catch (error) {
       console.error('Graphql error:', JSON.stringify(error, undefined, 2));
     }
+
+    resultTweet = await Promise.all(
+      resultTweet.map(async (tweet) => {
+        console.log('tweet', tweet.userAddress);
+        let userProfile: User = {
+          name: 'unnamed',
+          image: '/mm.png',
+          account: '0x0000000000000000000000000000000000000000',
+          userId: '0',
+        };
+        try {
+          const profile = await profileContractByProvider.getUserProfile(
+            tweet.userAddress
+          );
+          console.log('profile', profile);
+          userProfile = {
+            name: profile[1] === '' ? userProfile.name : profile[1],
+            account: tweet.userAddress,
+            image: profile[3] === '' ? userProfile.image : profile[3],
+            userId: userProfile.userId,
+          };
+        } catch (error) {
+          console.log('error', error);
+        }
+        return {
+          ...tweet,
+          user: userProfile,
+        };
+      })
+    );
+
+    setTweets(resultTweet);
   };
 
   const [tweets, setTweets] = useState<Tweet[]>([]);
@@ -87,17 +123,17 @@ export default function Tweets() {
       {tweets.map((tweet) => {
         return (
           <>
-            <div>
-              {tweet.user && tweet.user.image && tweet.user.image !== '' && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={tweet.user.image}
-                  alt={tweet.user.name}
-                  className={`${style.profileImage} smallHex`}
-                />
-              )}
-            </div>
             <div className={style.postMain}>
+              <div>
+                {tweet.user && tweet.user.image && tweet.user.image !== '' && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={tweet.user.image}
+                    alt={tweet.user.name}
+                    className={`${style.profileImage} smallHex`}
+                  />
+                )}
+              </div>
               <div>
                 <span className={style.headerDetails}>
                   <span className={style.name}>

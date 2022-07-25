@@ -12,6 +12,7 @@ type Context = {
   handleSetUser: (user: User) => void;
   handleLogout: () => void;
   handleIsProfile: (bool: boolean) => void;
+  handleFetchUser: (account: string) => void;
 };
 
 function createCtx<ContextType>() {
@@ -93,6 +94,7 @@ const useCtxMain = (): Context => {
     handleLogout,
     handleSetUser,
     handleIsProfile,
+    handleFetchUser,
   };
 };
 
