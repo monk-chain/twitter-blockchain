@@ -33,7 +33,8 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
 
 const useCtxMain = (): Context => {
   const { active, library, account } = useWeb3React<Web3Provider>();
-  const { profileContractByWallet } = useProviderContext();
+  const { profileContractByWallet, profileContractByProvider } =
+    useProviderContext();
   const [isProfile, setIsProfile] = useState(false);
   const [user, setUser] = useState<User>({
     name: 'unnamed',
@@ -51,6 +52,27 @@ const useCtxMain = (): Context => {
     setUser(user);
   };
 
+  const handleFetchUser = async (account: string) => {
+    try {
+      const userProfile = await profileContractByProvider.getUserProfile(
+        account
+      );
+      if (userProfile[1]) setIsProfile(true);
+      else setIsProfile(false);
+      setUser((_user) => {
+        // TODO あまり良くない userId account
+        return {
+          name: userProfile[1] === '' ? _user.name : userProfile[1],
+          account: account ? account : _user.account,
+          image: userProfile[3] === '' ? _user.image : userProfile[3],
+          userId: _user.userId,
+        };
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   const handleLogout = () => {
     setUser({
       name: 'unnamed',
@@ -61,23 +83,9 @@ const useCtxMain = (): Context => {
   };
 
   useEffect(() => {
-    (async () => {
-      const userProfile = await profileContractByWallet.getUserProfile(account);
-      if (userProfile.name) setIsProfile(true);
-      else setIsProfile(false);
-
-      setUser((_user) => {
-        // TODO あまり良くない userId account
-        return {
-          name: userProfile[1] === '' ? _user.name : userProfile[1],
-          account: account ? account : _user.account,
-          image: userProfile[3] === '' ? _user.image : userProfile[3],
-          userId: _user.userId,
-        };
-      });
-    })();
+    if (active && account) handleFetchUser(account);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileContractByWallet]);
+  }, [account]);
 
   return {
     user,

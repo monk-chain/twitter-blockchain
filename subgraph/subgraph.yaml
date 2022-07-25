@@ -1,0 +1,31 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Tweet
+    network: rinkeby
+    source:
+      address: "0xf21eC43EB2Be4F731980883221DA82299cFCCa29"
+      abi: Tweet
+      startBlock: 11085159
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - LikeEvent
+        - OwnershipTransferred
+        - Transfer
+        - TweetEvent
+      abis:
+        - name: Tweet
+          file: ./abis/Tweet.json
+      eventHandlers:
+        - event: LikeEvent(indexed address,uint256)
+          handler: handleLikeEvent
+        - event: TweetEvent(indexed address,uint256,string,string,string,uint256)
+          handler: handleTweetEvent
+      file: ./src/mapping.ts

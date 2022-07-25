@@ -67,7 +67,7 @@ contract Profile is AccessControl {
      * @dev Check the user's profile for a given address
      */
     function getUserProfile(address _userAddress)
-        external
+        public
         view
         returns (
             uint256,

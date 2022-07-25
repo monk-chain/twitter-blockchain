@@ -13,10 +13,10 @@ contract Tweet is ERC721, Ownable {
 
     Counters.Counter _tokenIds;
 
+    mapping(uint256 => TweetToken) public tweets;
+
     // address to like
     mapping(address => uint256) public likes;
-
-    // mapping(uint256 => TweetToken) public tweets;
 
     // Event to Tweeted
     event TweetEvent(
@@ -46,7 +46,8 @@ contract Tweet is ERC721, Ownable {
     ) public returns (uint256) {
         uint256 newId = _tokenIds.current();
         _mint(_msgSender(), newId);
-        _tokenIds.increment();
+        TweetToken memory _tweet = TweetToken(newId, _title, _body, _image);
+        tweets[newId] = _tweet;
         emit TweetEvent(
             _msgSender(),
             newId,
@@ -56,6 +57,7 @@ contract Tweet is ERC721, Ownable {
             block.timestamp
         );
 
+        _tokenIds.increment();
         return newId;
     }
 

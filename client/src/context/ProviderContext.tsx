@@ -8,6 +8,7 @@ import { profileContractAddress } from '../../../smart-contracts/contract.config
 
 type Context = {
   profileContractByWallet: ethers.Contract;
+  profileContractByProvider: ethers.Contract;
 };
 
 function createCtx<ContextType>() {
@@ -37,9 +38,22 @@ const useCtxMain = (): Context => {
     useState<ethers.Contract>(
       new ethers.Contract(profileContractAddress, ProfileContractJson.abi)
     );
+
+  // const provider = new AlchemyProvider('ropsten');
+  const provider = new ethers.providers.JsonRpcProvider(
+    `https://rpc.ankr.com/eth_rinkeby`
+  );
+  const [profileContractByProvider, setProfileContractByProvider] =
+    useState<ethers.Contract>(
+      new ethers.Contract(
+        profileContractAddress,
+        ProfileContractJson.abi,
+        provider
+      )
+    );
   useEffect(() => {
-    if (active) {
-      const signer = library?.getSigner();
+    if (active && library) {
+      const signer = library.getSigner();
       setProfileContractByWallet(
         new ethers.Contract(
           profileContractAddress,
@@ -57,6 +71,7 @@ const useCtxMain = (): Context => {
 
   return {
     profileContractByWallet,
+    profileContractByProvider,
   };
 };
 
