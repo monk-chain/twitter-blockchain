@@ -19,6 +19,8 @@ const style = {
   footer: `flex justify-between mr-28 mt-4 text-[#8899a6]`,
   footerIcon: `rounded-full text-lg p-2`,
 };
+import { Web3Provider } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 import { gql, GraphQLClient } from 'graphql-request';
 
 import { useProviderContext } from '@/context/ProviderContext';
@@ -26,7 +28,10 @@ import { useProviderContext } from '@/context/ProviderContext';
 import { User } from '@/types/User';
 
 export default function Tweets() {
-  const { profileContractByProvider } = useProviderContext();
+  const { tweetContractByWallet, profileContractByProvider } =
+    useProviderContext();
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+  const { active, library, account } = useWeb3React<Web3Provider>();
   const toast = useToast();
   const commingSoon = async () => {
     toast({
@@ -36,8 +41,17 @@ export default function Tweets() {
       isClosable: true,
     });
   };
+  const errorToast = async (error: any) => {
+    toast({
+      title: `${error}`,
+      status: 'error',
+      duration: 1000,
+      isClosable: true,
+    });
+  };
+
   const grClient = new GraphQLClient(
-    'https://api.studio.thegraph.com/query/31671/tweet/v0.1.0'
+    'https://api.studio.thegraph.com/query/31671/tweet/v0.1.11'
   );
   const getTweet = async () => {
     let resultTweet: Tweet[] = [];
@@ -47,7 +61,7 @@ export default function Tweets() {
       }>(
         gql`
           {
-            tweets(first: 5) {
+            tweets(first: 100) {
               id
               userAddress
               tokenId
@@ -67,7 +81,6 @@ export default function Tweets() {
 
     resultTweet = await Promise.all(
       resultTweet.map(async (tweet) => {
-        console.log('tweet', tweet.userAddress);
         let userProfile: User = {
           name: 'unnamed',
           image: '/mm.png',
@@ -78,7 +91,6 @@ export default function Tweets() {
           const profile = await profileContractByProvider.getUserProfile(
             tweet.userAddress
           );
-          console.log('profile', profile);
           userProfile = {
             name: profile[1] === '' ? userProfile.name : profile[1],
             account: tweet.userAddress,
@@ -94,30 +106,30 @@ export default function Tweets() {
         };
       })
     );
-
+    console.log('resultTweet', resultTweet);
     setTweets(resultTweet);
   };
 
-  const [tweets, setTweets] = useState<Tweet[]>([]);
-
-  // const tweet: Tweet = {
-  //   title: 'testtitle',
-  //   body: 'bodiyaaaaaaaaaaaaaaaaaa',
-  //   createAt: 'createAt',
-  //   image: '',
-  //   like: '20',
-  //   user: {
-  //     name: 'username',
-  //     image:
-  //       'https://lh3.googleusercontent.com/QyKXSK9dIsgw8MMDk9Mf4g6j8bV1dQ2RtmTPo8qjGDQXQUsuRqworV2vKKkSunjn21EaLdeaY0V6A7YN43T5xW6wahINlH3zm-10QQs=w600',
-  //     account: '0x',
-  //     userId: '1kll',
-  //   },
-  // };
-
   useEffect(() => {
     getTweet();
+    setInterval(getTweet, 15000);
   }, []);
+
+  const likeTransaction = async (tokenId: number) => {
+    if (!active) {
+      errorToast('loginしてください');
+      return;
+    }
+
+    try {
+      const pooltx = await tweetContractByWallet.like(tokenId);
+      await pooltx.wait();
+      getTweet();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   return (
     <div className={style.wrapper}>
       {tweets.map((tweet) => {
@@ -140,7 +152,7 @@ export default function Tweets() {
                     {tweet.user ? tweet.user.name : 'unnamed'}
                   </span>
                   <span className={style.handleAndTimeAgo}>
-                    @{tweet.user ? tweet.user.name : 'unnamed'}•{' '}
+                    @{tweet.user ? tweet.userAddress : 'unnamed'}•{' '}
                     {format(new Date(+tweet.createAt * 1000).getTime())}
                   </span>
                 </span>
@@ -160,9 +172,11 @@ export default function Tweets() {
                   <FaRetweet />
                 </div>
                 <div
-                  className={`${style.footerIcon} hover:bg-[#39243c] hover:text-[#f91c80]`}
+                  className={`${style.footerIcon} float hover:bg-[#39243c] hover:text-[#f91c80]`}
+                  onClick={() => likeTransaction(+tweet.id)}
                 >
                   <AiOutlineHeart />
+                  {+tweet.like}
                 </div>
                 <div
                   className={`${style.footerIcon} hover:bg-[#1e364a] hover:text-[#1d9bf0]`}

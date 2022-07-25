@@ -81,3 +81,13 @@ remix-*
 hardhat.config.js.org
 
 .next
+
+
+# GraphQL directories
+/build
+/generated
+
+
+memo.json
+test.sh
+deploy.response.txt

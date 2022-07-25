@@ -15,8 +15,7 @@ contract Tweet is ERC721, Ownable {
 
     mapping(uint256 => TweetToken) public tweets;
 
-    // address to like
-    mapping(address => uint256) public likes;
+    mapping(uint256 => address) public likes;
 
     // Event to Tweeted
     event TweetEvent(
@@ -63,9 +62,9 @@ contract Tweet is ERC721, Ownable {
 
     function like(uint256 _tokenId) public {
         uint256 newId = _tokenIds.current();
-        require(likes[_msgSender()] == 0, "Like exists!");
+        require(likes[_tokenId] == address(0), "Like exists!");
         require(newId >= _tokenId, "Tweet not exists!");
         emit LikeEvent(_msgSender(), _tokenId);
-        likes[_msgSender()] = _tokenId;
+        likes[_tokenId] = _msgSender();
     }
 }

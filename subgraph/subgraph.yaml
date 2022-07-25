@@ -6,9 +6,9 @@ dataSources:
     name: Tweet
     network: rinkeby
     source:
-      address: "0xf21eC43EB2Be4F731980883221DA82299cFCCa29"
+      address: "0x8923B13b9e44C15bf03143419455F7dc769EcbBD"
       abi: Tweet
-      startBlock: 11085159
+      startBlock: 11085625
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
