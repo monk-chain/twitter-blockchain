@@ -23,6 +23,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { gql, GraphQLClient } from 'graphql-request';
 
+import { useLayoutContext } from '@/context/LayoutContext';
 import { useProviderContext } from '@/context/ProviderContext';
 
 import { User } from '@/types/User';
@@ -30,6 +31,8 @@ import { User } from '@/types/User';
 export default function Tweets() {
   const { tweetContractByWallet, profileContractByProvider } =
     useProviderContext();
+
+  const { sort } = useLayoutContext();
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const { active, library, account } = useWeb3React<Web3Provider>();
   const toast = useToast();
@@ -53,15 +56,25 @@ export default function Tweets() {
   const grClient = new GraphQLClient(
     'https://api.studio.thegraph.com/query/31671/tweet/v0.1.11'
   );
+
   const getTweet = async () => {
+    const values = {
+      orderBy: sort === 'like' ? 'like' : 'createAt',
+      orderDirection: 'desc',
+    };
+
     let resultTweet: Tweet[] = [];
     try {
       const { tweets } = await grClient.request<{
         tweets: Tweet[];
       }>(
         gql`
-          {
-            tweets(first: 100) {
+          query GetTweet($orderBy: String!, $orderDirection: String!) {
+            tweets(
+              first: 100
+              orderBy: $orderBy
+              orderDirection: $orderDirection
+            ) {
               id
               userAddress
               tokenId
@@ -72,15 +85,22 @@ export default function Tweets() {
               createAt
             }
           }
-        `
+        `,
+        values
       );
       resultTweet = tweets;
     } catch (error) {
       console.error('Graphql error:', JSON.stringify(error, undefined, 2));
     }
 
-    resultTweet = await Promise.all(
-      resultTweet.map(async (tweet) => {
+    resultTweet = await setProfile(resultTweet);
+    console.log('resultTweet', resultTweet);
+    setTweets(resultTweet);
+  };
+
+  const setProfile = async (tweets: Tweet[]) => {
+    return await Promise.all(
+      tweets.map(async (tweet) => {
         let userProfile: User = {
           name: 'unnamed',
           image: '/mm.png',
@@ -106,14 +126,15 @@ export default function Tweets() {
         };
       })
     );
-    console.log('resultTweet', resultTweet);
-    setTweets(resultTweet);
   };
 
   useEffect(() => {
-    getTweet();
     setInterval(getTweet, 15000);
   }, []);
+
+  useEffect(() => {
+    getTweet();
+  }, [sort]);
 
   const likeTransaction = async (tokenId: number) => {
     if (!active) {

@@ -34,10 +34,7 @@ export default function TweetBox() {
       errorToast('message を入力してください。');
       return;
     }
-    console.log(
-      '🚀 ~ file: TweetBox.tsx ~ line 34 ~ mintTransaction ~ content',
-      content
-    );
+    setContent('');
 
     try {
       const pooltx = await tweetContractByWallet.mint('', content, '');

@@ -1,5 +1,7 @@
 import { useDisclosure } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
+
+import { Srot } from '@/types/sort';
 
 type Context = {
   isWalletModal: boolean;
@@ -13,6 +15,9 @@ type Context = {
   isInputModal: boolean;
   handleOpenInputModal: () => void;
   handleCloseInputModal: () => void;
+
+  sort: Srot;
+  handleSetSort: (sort: Srot) => void;
 };
 
 function createCtx<ContextType>() {
@@ -51,6 +56,11 @@ const useCtxMain = (): Context => {
     onClose: handleCloseInputModal,
   } = useDisclosure();
 
+  const [sort, setSort] = useState<Srot>('new');
+  const handleSetSort = (sort: Srot) => {
+    setSort(sort);
+  };
+
   return {
     isWalletModal,
     handleOpenWalletModal,
@@ -63,6 +73,9 @@ const useCtxMain = (): Context => {
     isInputModal,
     handleOpenInputModal,
     handleCloseInputModal,
+
+    sort,
+    handleSetSort,
   };
 };
 
