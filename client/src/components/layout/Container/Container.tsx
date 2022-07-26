@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { Select } from '@chakra-ui/react';
 
 import { useLayoutContext } from '@/context/LayoutContext';
@@ -11,6 +14,9 @@ const style = {
   select: 'rounded-full text-lg p-2',
 };
 
+/**
+ * Headers Component
+ */
 export default function ContainerPage() {
   const { handleSetSort } = useLayoutContext();
   return (

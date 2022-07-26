@@ -13,6 +13,11 @@ type useCreate<T> = {
   handleEventSetTargetObject: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+/**
+ * Create Hooks
+ * @param props 作成したオブジェクト
+ * @param validate コールバック
+ */
 const useTargetObject = <T>(props: T, validate?: validate): useCreate<T> => {
   const [targetobject, setTargetObject] = useState<T>(props);
 

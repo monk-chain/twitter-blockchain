@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { useToast } from '@chakra-ui/react';
 import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
@@ -6,12 +9,9 @@ import { useState } from 'react';
 import { useProviderContext } from '@/context/ProviderContext';
 
 import { Emoji, Gif, Media, Plans, Survey } from '../../icons/twitter';
-const style = {
-  tweetButton: `bg-[#1d9bf0] hover:bg-[#1b8cd8] flex items-center justify-center font-bold rounded-3xl mb-[10px] mt-[10px] cursor-pointer`,
-};
 export default function TweetBox() {
   const [content, setContent] = useState('');
-  const { active, library, account } = useWeb3React<Web3Provider>();
+  const { active } = useWeb3React<Web3Provider>();
   const toast = useToast();
   const errorToast = async (error: any) => {
     toast({
@@ -21,8 +21,7 @@ export default function TweetBox() {
       isClosable: true,
     });
   };
-  const { tweetContractByWallet, profileContractByProvider } =
-    useProviderContext();
+  const { tweetContractByWallet } = useProviderContext();
 
   const mintTransaction = async () => {
     if (!active) {

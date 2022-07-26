@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
@@ -33,9 +36,8 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const useCtxMain = (): Context => {
-  const { active, library, account } = useWeb3React<Web3Provider>();
-  const { profileContractByWallet, profileContractByProvider } =
-    useProviderContext();
+  const { active, account } = useWeb3React<Web3Provider>();
+  const { profileContractByProvider } = useProviderContext();
   const [isProfile, setIsProfile] = useState(false);
   const [user, setUser] = useState<User>({
     name: 'unnamed',

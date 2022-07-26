@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AiOutlineHeart } from 'react-icons/ai';
@@ -34,7 +36,7 @@ export default function Tweets() {
 
   const { sort } = useLayoutContext();
   const [tweets, setTweets] = useState<Tweet[]>([]);
-  const { active, library, account } = useWeb3React<Web3Provider>();
+  const { active } = useWeb3React<Web3Provider>();
   const toast = useToast();
   const commingSoon = async () => {
     toast({
@@ -44,6 +46,8 @@ export default function Tweets() {
       isClosable: true,
     });
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorToast = async (error: any) => {
     toast({
       title: `${error}`,
@@ -65,6 +69,7 @@ export default function Tweets() {
 
     let resultTweet: Tweet[] = [];
     try {
+      // sortを参照して並び変えるクエリー
       const { tweets } = await grClient.request<{
         tweets: Tweet[];
       }>(

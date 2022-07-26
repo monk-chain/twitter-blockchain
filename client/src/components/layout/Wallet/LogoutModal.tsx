@@ -15,7 +15,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 
 import { useLayoutContext } from '@/context/LayoutContext';
-import { useProviderContext } from '@/context/ProviderContext';
 import { useUserContext } from '@/context/UserContext';
 
 export const LogoutModal = () => {
@@ -26,8 +25,7 @@ export const LogoutModal = () => {
   } = useLayoutContext();
   const toast = useToast();
 
-  const { account, deactivate, library } = useWeb3React<Web3Provider>();
-  const { profileContractByWallet } = useProviderContext();
+  const { deactivate } = useWeb3React<Web3Provider>();
   const { isProfile, handleLogout } = useUserContext();
 
   // useEffect(() => {}, [account]);

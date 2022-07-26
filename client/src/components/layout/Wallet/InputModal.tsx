@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import {
   Button,
   Input,
@@ -48,7 +51,7 @@ export const InputModal = () => {
         userInput.image
       );
       const tx = await pooltx.wait();
-      const { args, blockNumber } = tx.events[0];
+      const { args } = tx.events[0];
       const msgSender = args[0];
       const [userId, name, accountAddress, image] =
         await profileContractByWallet.getUserProfile(msgSender);
