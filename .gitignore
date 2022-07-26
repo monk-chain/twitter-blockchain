@@ -57,10 +57,6 @@ typechain
 cache
 artifacts
 
-# smart contract
-libs/contracts/
-contract.config*.js
-contract-upgrade.config*.js
 
 # wallet private key file
 .secret
