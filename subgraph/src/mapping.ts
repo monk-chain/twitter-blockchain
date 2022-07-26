@@ -1,12 +1,10 @@
 /* eslint-disable prefer-const */
-import { Address, BigInt } from "@graphprotocol/graph-ts";
-import {
-  LikeEvent,
-  TweetEvent,
-  Tweet as Contract,
-} from "../generated/Tweet/Tweet";
-import { Tweet, User, Like } from "../generated/schema";
+import { LikeEvent, TweetEvent } from "../generated/Tweet/Tweet";
+import { Tweet, Like } from "../generated/schema";
 
+/**
+ * Tweet Event
+ */
 export function handleTweetEvent(event: TweetEvent): void {
   let entity = new Tweet(event.params.tokenId.toHex());
   entity.userAddress = event.params.userAddress;
@@ -20,6 +18,9 @@ export function handleTweetEvent(event: TweetEvent): void {
   entity.save();
 }
 
+/**
+ * Like Event
+ */
 export function handleLikeEvent(event: LikeEvent): void {
   let entity = new Like(
     `${event.params.userAddress.toHex()}-${event.params.tokenId}`

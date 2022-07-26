@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 import "hardhat/console.sol";
 
+/** @title Tweet.
+ * @notice It is a contract tweet message
+ */
 contract Tweet is ERC721, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
@@ -38,6 +41,7 @@ contract Tweet is ERC721, Ownable {
 
     constructor() ERC721("Tweet", "tweets") {}
 
+    // NFT is a tweet
     function mint(
         string memory _title,
         string memory _body,
@@ -60,6 +64,7 @@ contract Tweet is ERC721, Ownable {
         return newId;
     }
 
+    // Emit like
     function like(uint256 _tokenId) public {
         uint256 newId = _tokenIds.current();
         require(likes[_tokenId] == address(0), "Like exists!");
