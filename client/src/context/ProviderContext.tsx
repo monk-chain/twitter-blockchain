@@ -3,12 +3,12 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
-import ProfileContractJson from '../../../smart-contracts/artifacts/contracts/Profile.sol/Profile.json';
-import TweetContractJson from '../../../smart-contracts/artifacts/contracts/Tweet.sol/Tweet.json';
+import ProfileContractJson from '../../artifacts/contracts/Profile.sol/Profile.json';
+import TweetContractJson from '../../artifacts/contracts/Tweet.sol/Tweet.json';
 import {
   profileContractAddress,
   tweetContractAddress,
-} from '../../../smart-contracts/contract.config';
+} from '../../contract.config';
 
 type Context = {
   profileContractByWallet: ethers.Contract;
